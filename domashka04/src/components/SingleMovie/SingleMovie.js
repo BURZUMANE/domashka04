@@ -3,9 +3,8 @@ import { Route, Link } from 'react-router-dom';
 import { fetchMovie } from '../../services/fetchMovies';
 import Article from '../article/Article';
 import Cast from './cast/Cast';
-// import Reviews from './reviews/Reviews';
 import Select from 'react-select';
-// import Loadable from 'react-loadable';
+
 const AsyncReviews = lazy(() => import('./reviews/Reviews'));
 const options = [
   { value: 'cast', label: 'Cast' },
@@ -17,22 +16,41 @@ class SingleMovie extends Component {
     movie: null,
     cast: null,
     selectedOption: 'Cast',
+    query: '',
   };
   componentDidMount() {
+    console.log(this.props);
+    this.props.location.state.search &&
+      this.setState({
+        query: this.props.location.state.search,
+      });
     this.updateState();
   }
 
   updateState = async () => {
-    const movieId = this.props.match.params.movieId;
-    const movie = await fetchMovie(movieId);
-    this.setState({ movie: movie.data });
+    const movieId = this.props.match.params.movieId
+      ? this.props.match.params.movieId
+      : '121';
+    console.log(movieId);
+    try {
+      const movie = await fetchMovie(movieId);
+      this.setState({ movie: movie.data });
+    } catch (eror) {
+      console.log(eror);
+      this.props.history.push('/notfound');
+    }
   };
 
   handleGoBack = () => {
-    const { location } = this.props;
-    location
-      ? this.props.history.push(location.state.from)
-      : this.props.history.push('/home');
+    const { location, history } = this.props;
+    location.state.search
+      ? history.push({
+          pathname: this.props.location.state.from,
+          state: { from: location },
+          search: this.state.query,
+          // search: location.state.search ? this.state.query : '',
+        })
+      : history.push('/');
   };
   handleChange = async (selectedOption) => {
     await this.setState({ selectedOption });
@@ -41,6 +59,7 @@ class SingleMovie extends Component {
     );
   };
   render() {
+    // console.log(this.props.location.state.search);
     const { movie } = this.state;
     return (
       <>
@@ -56,9 +75,10 @@ class SingleMovie extends Component {
               style={{ paddingRight: 10 }}
               to={{
                 pathname: `${this.props.match.url + '/cast'}`,
-                // search: '?category=adventure',
-                // hash: '#treasure-island',
-                // state: { from: this.props.match.url },
+                state: {
+                  from: this.props.location.state.from,
+                  search: this.props.location.state.search,
+                },
               }}
             >
               cast
@@ -66,9 +86,10 @@ class SingleMovie extends Component {
             <Link
               to={{
                 pathname: `${this.props.match.url + '/reviews'}`,
-                // search: '?category=adventure',
-                // hash: '#treasure-island',
-                // state: { from: this.props.match.url },
+                state: {
+                  from: this.props.location.state.from,
+                  search: this.props.location.state.search,
+                },
               }}
             >
               reviews

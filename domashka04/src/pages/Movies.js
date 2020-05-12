@@ -10,6 +10,7 @@ class Movies extends Component {
     movies: null,
   };
   componentDidMount() {
+    console.log('this.props llalala', this.props.location.search);
     const parsed = queryString.parse(this.props.location.search);
     if (parsed.query) {
       this.updateMovies(parsed.query);
@@ -50,7 +51,11 @@ class Movies extends Component {
       <Fragment>
         <MovieSearch onChange={this.onChange} onSubmit={this.onSubmit} />
         {movies ? (
-          <MovieList movies={movies} location={location} />
+          <MovieList
+            movies={movies}
+            location={location.pathname}
+            search={`query=${this.state.query}`}
+          />
         ) : (
           <p>Nothing for you</p>
         )}

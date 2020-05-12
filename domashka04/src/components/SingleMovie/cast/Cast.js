@@ -20,7 +20,6 @@ export default class Cast extends Component {
 
   render() {
     const { cast } = this.state;
-    console.log(cast);
     return (
       <div>
         {cast && (
