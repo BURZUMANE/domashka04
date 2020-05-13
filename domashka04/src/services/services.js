@@ -1,7 +1,7 @@
 import axios from 'axios';
 axios.defaults.baseURL = 'https://api.themoviedb.org/3/';
 
-export const fetchMovieByQuery = async (query) => {
+export const fetchMovieByQuery = async query => {
   // https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
   try {
     const fetchStr = `search/movie?api_key=${process.env.REACT_APP_UNIQUE_KEY}&language=en-US&page=1&include_adult=false&query=${query}`;
@@ -12,7 +12,7 @@ export const fetchMovieByQuery = async (query) => {
   }
 };
 
-export const fetchMovieReviews = async (id) => {
+export const fetchMovieReviews = async id => {
   // https://api.themoviedb.org/3/movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1;
   try {
     const fetchStr = `/movie/${id}/reviews?api_key=${process.env.REACT_APP_UNIQUE_KEY}`;
@@ -23,7 +23,7 @@ export const fetchMovieReviews = async (id) => {
   }
 };
 
-export const fetchMovieCast = async (id) => {
+export const fetchMovieCast = async id => {
   try {
     const fetchStr = `/movie/${id}/credits?api_key=${process.env.REACT_APP_UNIQUE_KEY}`;
     const fetchMovieCast = await axios.get(fetchStr);
@@ -32,7 +32,7 @@ export const fetchMovieCast = async (id) => {
     console.log(error);
   }
 };
-export const fetchMovie = async (id) => {
+export const fetchMovie = async id => {
   try {
     const fetchStr = `movie/${id}?api_key=${process.env.REACT_APP_UNIQUE_KEY}&language=en-US`;
     const fetchMovieInfo = await axios.get(fetchStr);

@@ -1,12 +1,12 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 ReactDOM.render(
-  <Router>
-    <Route component={App} />
-  </Router>,
-  document.getElementById('root')
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.querySelector('#root'),
 );

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { fetchMovieReviews } from '../../../services/fetchMovies';
+import * as articleAPI from '../services/services';
 class reviews extends Component {
   state = { reviews: null };
   componentDidMount() {
     this.updateState();
   }
   updateState = async () => {
+    console.log(this.props);
     try {
-      const movieId = this.props.id;
-      const reviews = await fetchMovieReviews(movieId);
+      const movieId = this.props.match.params.id;
+      const reviews = await articleAPI.fetchMovieReviews(movieId);
       const actualReviews = reviews.data.results;
       this.setState({ reviews: actualReviews });
     } catch (error) {

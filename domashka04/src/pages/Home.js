@@ -1,32 +1,25 @@
-import React, { Component, Fragment } from 'react';
-import { fetchMovies } from '../services/fetchMovies';
-import MovieList from '../components/MovieList/MovieList';
-
+import React, { Component } from 'react';
+import MovieList from '../components/movieList/MovieList';
+import * as articleAPI from '../services/services';
 class Home extends Component {
-  state = {
-    movies: null,
-    message: null,
-  };
+  state = { movies: null };
   componentDidMount() {
     this.updateMovies();
   }
 
   updateMovies = async () => {
-    try {
-      const fetchResult = await fetchMovies();
-      const movies = fetchResult.data.results;
-      this.setState({ movies });
-    } catch (error) {
-      console.log(error);
-    }
+    const result = await articleAPI.fetchMovies();
+    const movies = result.data.results;
+    this.setState({ movies });
   };
   render() {
-    const { location } = this.props;
     const { movies } = this.state;
     return (
-      <Fragment>
-        {movies && <MovieList movies={movies} location={location} />}
-      </Fragment>
+      <>
+        <h1>Home</h1>
+        <h2>Popular movies </h2>
+        {movies && <MovieList {...this.props} movies={movies} />}
+      </>
     );
   }
 }

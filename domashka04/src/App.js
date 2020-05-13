@@ -1,29 +1,25 @@
-import React, { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
 import Nav from './components/nav/Nav';
+import Movies from './pages/Movies';
+import MovieDetailsPage from './pages/MovieDetailsPage';
 
-// import SingleMovie from './components/SingleMovie/SingleMovie';
-const AsyncHome = lazy(() => import('./pages/Home'));
-const AsyncSingleMovie = lazy(() =>
-  import('./components/SingleMovie/SingleMovie')
+const containerStyles = {
+  maxWidth: 1170,
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  padding: 'padding: 0 16px',
+};
+
+const App = () => (
+  <div style={containerStyles}>
+    <Nav />
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Route path="/movies/:id" component={MovieDetailsPage} />
+      <Route path="/movies" component={Movies} />
+    </Switch>
+  </div>
 );
-const AsyncMovie = lazy(() => import('./pages/Movies'));
-const AsyncNotFound = lazy(() => import('./pages/NotFound'));
-
-function App() {
-  return (
-    <>
-      <Nav />
-      <Suspense fallback={<h1>Loading...</h1>}>
-        <Switch>
-          <Route path="/" exact component={AsyncHome} />
-          <Route path="/movies/:movieId" component={AsyncSingleMovie} />
-          <Route path="/movies" component={AsyncMovie} />
-          <Route component={AsyncNotFound} />} />
-        </Switch>
-      </Suspense>
-    </>
-  );
-}
-
 export default App;

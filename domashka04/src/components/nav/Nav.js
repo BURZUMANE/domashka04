@@ -1,18 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-const Nav = () => {
-  return (
-    <nav>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/movies">Movies</Link>
-        </li>
-      </ul>
-    </nav>
-  );
+import { NavLink } from 'react-router-dom';
+
+const navStyles = {
+  backgroundColor: 'pink',
+  display: 'flex',
+  listStyle: 'none',
 };
+const ativeStyle = {
+  color: 'palevioletred',
+};
+
+const Nav = () => (
+  <ul style={navStyles}>
+    <li>
+      <NavLink to="/" exact activeStyle={ativeStyle}>
+        Home
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/movies" activeStyle={ativeStyle}>
+        Movies
+      </NavLink>
+    </li>
+  </ul>
+);
 
 export default Nav;

@@ -1,65 +1,62 @@
-import React, { Component, Fragment } from 'react';
-import MovieSearch from '../components/movieSearch/MovieSearch';
-import { fetchMovieByQuery } from '../services/fetchMovies';
+import React, { Component } from 'react';
+// import { Link } from 'react-router-dom';
 import queryString from 'query-string';
-import MovieList from '../components/MovieList/MovieList';
 
+import * as articleAPI from '../services/services';
+import MovieList from '../components/movieList/MovieList';
 class Movies extends Component {
-  state = {
-    query: '',
-    movies: null,
-  };
+  state = { movies: '', query: '' };
+
   componentDidMount() {
-    console.log('this.props llalala', this.props.location.search);
-    const parsed = queryString.parse(this.props.location.search);
-    if (parsed.query) {
-      this.updateMovies(parsed.query);
-    } else if (this.state.query.length) {
-      this.updateMovies(this.state.query);
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query) {
-      this.updateMovies(this.state.query);
+    // console.log(this.props.location.search);
+    const queryParams = queryString.parse(this.props.location.search);
+    // console.log(queryParams.query);
+    if (queryParams.query) {
+      this.updateMovies(queryParams.query);
     }
   }
 
-  onSubmit = async (e) => {
+  componentDidUpdate(prevProps) {
+    const prevQuery = queryString.parse(prevProps.location.search);
+    const currentQuery = queryString.parse(this.props.location.search);
+    if (prevQuery.query !== currentQuery.query) {
+      this.updateMovies(currentQuery.query);
+    }
+  }
+  updateMovies = async value => {
+    const movies = await articleAPI.fetchMovieByQuery(value);
+    this.setState({ movies });
+  };
+  handleSubmit = e => {
     e.preventDefault();
-    const query = e.target.search.value;
-    await this.setState({ query });
     this.props.history.push({
       pathname: this.props.location.pathname,
-      search: `query=${this.state.query}`,
+      search: `query=${e.target.search.value}`,
     });
-  };
-  updateMovies = async (value) => {
-    try {
-      const fetchResult = await fetchMovieByQuery(value);
-      this.setState({ movies: fetchResult });
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-  getQueryString = (props) => {
-    return queryString.parse(props.location.search);
   };
   render() {
     const { movies } = this.state;
-    const { location } = this.props;
     return (
-      <Fragment>
-        <MovieSearch onChange={this.onChange} onSubmit={this.onSubmit} />
+      <>
+        <form onSubmit={this.handleSubmit}>
+          <input placeholder="..." name="search"></input>
+          <button>Search</button>
+        </form>
         {movies ? (
-          <MovieList
-            movies={movies}
-            location={location.pathname}
-            search={`query=${this.state.query}`}
-          />
+          <MovieList {...this.props} movies={movies} />
         ) : (
-          <p>Nothing for you</p>
+          //   <ul style={{ listStyle: 'none' }}>
+          //     {movies.map(movie => (
+          //       <li key={movie.id}>
+          //         <Link to={`${this.props.match.path}/${movie.id}`}>
+          //           {movie.title}
+          //         </Link>
+          //       </li>
+          //     ))}
+          //   </ul>
+          <p>Please, look for something</p>
         )}
-      </Fragment>
+      </>
     );
   }
 }

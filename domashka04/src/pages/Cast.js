@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchMovieCast } from '../../../services/fetchMovies';
+import * as articleAPI from '../services/services';
 
 export default class Cast extends Component {
   state = { cast: null };
@@ -8,9 +8,10 @@ export default class Cast extends Component {
   }
 
   updateState = async () => {
+    console.log(this.props.match.params);
     try {
-      const movieId = this.props.id;
-      const cast = await fetchMovieCast(movieId);
+      const movieId = this.props.match.params.id;
+      const cast = await articleAPI.fetchMovieCast(movieId);
       const actualCast = cast.data.cast;
       this.setState({ cast: actualCast });
     } catch (error) {
@@ -24,7 +25,7 @@ export default class Cast extends Component {
       <div>
         {cast && (
           <ul>
-            {cast.map((item) => (
+            {cast.map(item => (
               <li key={item.cast_id}>
                 <h2>{item.character}</h2>
                 <p>{item.name}</p>
